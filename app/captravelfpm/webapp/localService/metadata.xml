@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml">
+        <edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="TravelService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Travel" EntityType="TravelService.Travel">
+                    <NavigationPropertyBinding Path="TravelCurrency" Target="Currencies"/>
+                    <NavigationPropertyBinding Path="to_Booking" Target="Booking"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="Travel"/>
+                </EntitySet>
+                <EntitySet Name="Booking" EntityType="TravelService.Booking">
+                    <NavigationPropertyBinding Path="FlightCurrency" Target="Currencies"/>
+                    <NavigationPropertyBinding Path="BookingStatus" Target="BookingStatus"/>
+                    <NavigationPropertyBinding Path="to_Travel" Target="Travel"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="Booking"/>
+                </EntitySet>
+                <EntitySet Name="Currencies" EntityType="TravelService.Currencies">
+                    <NavigationPropertyBinding Path="texts" Target="Currencies_texts"/>
+                    <NavigationPropertyBinding Path="localized" Target="Currencies_texts"/>
+                </EntitySet>
+                <EntitySet Name="BookingStatus" EntityType="TravelService.BookingStatus">
+                    <NavigationPropertyBinding Path="texts" Target="BookingStatus_texts"/>
+                    <NavigationPropertyBinding Path="localized" Target="BookingStatus_texts"/>
+                </EntitySet>
+                <EntitySet Name="Currencies_texts" EntityType="TravelService.Currencies_texts"/>
+                <EntitySet Name="BookingStatus_texts" EntityType="TravelService.BookingStatus_texts"/>
+            </EntityContainer>
+            <EntityType Name="Travel">
+                <Key>
+                    <PropertyRef Name="TravelUUID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="TravelUUID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="TravelID" Type="Edm.Int32"/>
+                <Property Name="BeginDate" Type="Edm.Date"/>
+                <Property Name="EndDate" Type="Edm.Date"/>
+                <Property Name="TravelPrice" Type="Edm.Decimal" Scale="2" Precision="16"/>
+                <NavigationProperty Name="TravelCurrency" Type="TravelService.Currencies">
+                    <ReferentialConstraint Property="TravelCurrency_code" ReferencedProperty="code"/>
+                </NavigationProperty>
+                <Property Name="TravelCurrency_code" Type="Edm.String" MaxLength="3"/>
+                <Property Name="Description" Type="Edm.String" MaxLength="255"/>
+                <NavigationProperty Name="to_Booking" Type="Collection(TravelService.Booking)" Partner="to_Travel">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="TravelService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="TravelService.Travel"/>
+            </EntityType>
+            <EntityType Name="Booking">
+                <Key>
+                    <PropertyRef Name="BookingUUID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="BookingUUID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="BookingID" Type="Edm.Int32"/>
+                <Property Name="BookingDate" Type="Edm.Date"/>
+                <Property Name="ConnectionID" Type="Edm.String" MaxLength="4"/>
+                <Property Name="FlightDate" Type="Edm.Date"/>
+                <Property Name="FlightPrice" Type="Edm.Decimal" Scale="2" Precision="16"/>
+                <NavigationProperty Name="FlightCurrency" Type="TravelService.Currencies">
+                    <ReferentialConstraint Property="FlightCurrency_code" ReferencedProperty="code"/>
+                </NavigationProperty>
+                <Property Name="FlightCurrency_code" Type="Edm.String" MaxLength="3"/>
+                <NavigationProperty Name="BookingStatus" Type="TravelService.BookingStatus">
+                    <ReferentialConstraint Property="BookingStatus_Code" ReferencedProperty="Code"/>
+                </NavigationProperty>
+                <Property Name="BookingStatus_Code" Type="Edm.String"/>
+                <NavigationProperty Name="to_Travel" Type="TravelService.Travel" Partner="to_Booking">
+                    <ReferentialConstraint Property="to_Travel_TravelUUID" ReferencedProperty="TravelUUID"/>
+                </NavigationProperty>
+                <Property Name="to_Travel_TravelUUID" Type="Edm.Guid"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="TravelService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="TravelService.Booking"/>
+            </EntityType>
+            <EntityType Name="Currencies">
+                <Key>
+                    <PropertyRef Name="code"/>
+                </Key>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="symbol" Type="Edm.String" MaxLength="5"/>
+                <Property Name="minorUnit" Type="Edm.Int16"/>
+                <NavigationProperty Name="texts" Type="Collection(TravelService.Currencies_texts)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="localized" Type="TravelService.Currencies_texts">
+                    <ReferentialConstraint Property="code" ReferencedProperty="code"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="BookingStatus">
+                <Key>
+                    <PropertyRef Name="Code"/>
+                </Key>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="Code" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="texts" Type="Collection(TravelService.BookingStatus_texts)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="localized" Type="TravelService.BookingStatus_texts">
+                    <ReferentialConstraint Property="Code" ReferencedProperty="Code"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="DraftAdministrativeData">
+                <Key>
+                    <PropertyRef Name="DraftUUID"/>
+                </Key>
+                <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="CreatedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsCreatedByMe" Type="Edm.Boolean"/>
+                <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="InProcessByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsProcessedByMe" Type="Edm.Boolean"/>
+            </EntityType>
+            <EntityType Name="Currencies_texts">
+                <Key>
+                    <PropertyRef Name="locale"/>
+                    <PropertyRef Name="code"/>
+                </Key>
+                <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="BookingStatus_texts">
+                <Key>
+                    <PropertyRef Name="locale"/>
+                    <PropertyRef Name="Code"/>
+                </Key>
+                <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="Code" Type="Edm.String" Nullable="false"/>
+            </EntityType>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="TravelService.Travel"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="TravelService.Travel"/>
+            </Action>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="TravelService.Booking"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="TravelService.Booking"/>
+            </Action>
+            <Action Name="draftActivate" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="TravelService.Travel"/>
+                <ReturnType Type="TravelService.Travel"/>
+            </Action>
+            <Action Name="draftEdit" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="TravelService.Travel"/>
+                <Parameter Name="PreserveChanges" Type="Edm.Boolean"/>
+                <ReturnType Type="TravelService.Travel"/>
+            </Action>
+            <Annotations Target="TravelService.EntityContainer/Travel">
+                <Annotation Term="Common.DraftRoot">
+                    <Record Type="Common.DraftRootType">
+                        <PropertyValue Property="ActivationAction" String="TravelService.draftActivate"/>
+                        <PropertyValue Property="EditAction" String="TravelService.draftEdit"/>
+                        <PropertyValue Property="PreparationAction" String="TravelService.draftPrepare"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="TravelService.Travel/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                </Annotations>
+                <Annotations Target="TravelService.Travel/createdBy">
+                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                    <Annotation Term="Core.Immutable" Bool="true"/>
+                    <Annotation Term="Core.Computed" Bool="true"/>
+                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                        </Annotations>
+                        <Annotations Target="TravelService.Travel/modifiedAt">
+                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                            <Annotation Term="Core.Computed" Bool="true"/>
+                            <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                            </Annotations>
+                            <Annotations Target="TravelService.Travel/modifiedBy">
+                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                <Annotation Term="Core.Computed" Bool="true"/>
+                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                    <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                    </Annotations>
+                                    <Annotations Target="TravelService.Travel/TravelID">
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="TravelService.Travel/TravelPrice">
+                                        <Annotation Term="Measures.ISOCurrency" Path="TravelCurrency_code"/>
+                                    </Annotations>
+                                    <Annotations Target="TravelService.Travel/TravelCurrency">
+                                        <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                            <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                            </Annotations>
+                                            <Annotations Target="TravelService.Travel/TravelCurrency_code">
+                                                <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                                    <Annotation Term="Common.ValueList">
+                                                        <Record Type="Common.ValueListType">
+                                                            <PropertyValue Property="Label" String="{i18n>Currency}"/>
+                                                                <PropertyValue Property="CollectionPath" String="Currencies"/>
+                                                                <PropertyValue Property="Parameters">
+                                                                    <Collection>
+                                                                        <Record Type="Common.ValueListParameterInOut">
+                                                                            <PropertyValue Property="LocalDataProperty" PropertyPath="TravelCurrency_code"/>
+                                                                            <PropertyValue Property="ValueListProperty" String="code"/>
+                                                                        </Record>
+                                                                        <Record Type="Common.ValueListParameterDisplayOnly">
+                                                                            <PropertyValue Property="ValueListProperty" String="name"/>
+                                                                        </Record>
+                                                                    </Collection>
+                                                                </PropertyValue>
+                                                            </Record>
+                                                        </Annotation>
+                                                        <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                                        </Annotations>
+                                                        <Annotations Target="TravelService.Travel/IsActiveEntity">
+                                                            <Annotation Term="UI.Hidden" Bool="true"/>
+                                                        </Annotations>
+                                                        <Annotations Target="TravelService.Travel/HasActiveEntity">
+                                                            <Annotation Term="UI.Hidden" Bool="true"/>
+                                                        </Annotations>
+                                                        <Annotations Target="TravelService.Travel/HasDraftEntity">
+                                                            <Annotation Term="UI.Hidden" Bool="true"/>
+                                                        </Annotations>
+                                                        <Annotations Target="TravelService.Travel/DraftAdministrativeData">
+                                                            <Annotation Term="UI.Hidden" Bool="true"/>
+                                                        </Annotations>
+                                                        <Annotations Target="TravelService.EntityContainer/Booking">
+                                                            <Annotation Term="Common.DraftNode">
+                                                                <Record Type="Common.DraftNodeType">
+                                                                    <PropertyValue Property="PreparationAction" String="TravelService.draftPrepare"/>
+                                                                </Record>
+                                                            </Annotation>
+                                                        </Annotations>
+                                                        <Annotations Target="TravelService.Booking/createdAt">
+                                                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                            <Annotation Term="Core.Immutable" Bool="true"/>
+                                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                                            <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                                                            </Annotations>
+                                                            <Annotations Target="TravelService.Booking/createdBy">
+                                                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                <Annotation Term="Core.Immutable" Bool="true"/>
+                                                                <Annotation Term="Core.Computed" Bool="true"/>
+                                                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                    <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                                                                    </Annotations>
+                                                                    <Annotations Target="TravelService.Booking/modifiedAt">
+                                                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                                        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                                                                        </Annotations>
+                                                                        <Annotations Target="TravelService.Booking/modifiedBy">
+                                                                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                                                            <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                                <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                                                                </Annotations>
+                                                                                <Annotations Target="TravelService.Booking/BookingID">
+                                                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                </Annotations>
+                                                                                <Annotations Target="TravelService.Booking/FlightPrice">
+                                                                                    <Annotation Term="Measures.ISOCurrency" Path="FlightCurrency_code"/>
+                                                                                </Annotations>
+                                                                                <Annotations Target="TravelService.Booking/FlightCurrency">
+                                                                                    <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                                                                        <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                                                                        </Annotations>
+                                                                                        <Annotations Target="TravelService.Booking/FlightCurrency_code">
+                                                                                            <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                                                                                <Annotation Term="Common.ValueList">
+                                                                                                    <Record Type="Common.ValueListType">
+                                                                                                        <PropertyValue Property="Label" String="{i18n>Currency}"/>
+                                                                                                            <PropertyValue Property="CollectionPath" String="Currencies"/>
+                                                                                                            <PropertyValue Property="Parameters">
+                                                                                                                <Collection>
+                                                                                                                    <Record Type="Common.ValueListParameterInOut">
+                                                                                                                        <PropertyValue Property="LocalDataProperty" PropertyPath="FlightCurrency_code"/>
+                                                                                                                        <PropertyValue Property="ValueListProperty" String="code"/>
+                                                                                                                    </Record>
+                                                                                                                    <Record Type="Common.ValueListParameterDisplayOnly">
+                                                                                                                        <PropertyValue Property="ValueListProperty" String="name"/>
+                                                                                                                    </Record>
+                                                                                                                </Collection>
+                                                                                                            </PropertyValue>
+                                                                                                        </Record>
+                                                                                                    </Annotation>
+                                                                                                    <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                                                                                    </Annotations>
+                                                                                                    <Annotations Target="TravelService.Booking/BookingStatus_Code">
+                                                                                                        <Annotation Term="Common.ValueList">
+                                                                                                            <Record Type="Common.ValueListType">
+                                                                                                                <PropertyValue Property="Label" String="BookingStatus"/>
+                                                                                                                <PropertyValue Property="CollectionPath" String="BookingStatus"/>
+                                                                                                                <PropertyValue Property="Parameters">
+                                                                                                                    <Collection>
+                                                                                                                        <Record Type="Common.ValueListParameterInOut">
+                                                                                                                            <PropertyValue Property="LocalDataProperty" PropertyPath="BookingStatus_Code"/>
+                                                                                                                            <PropertyValue Property="ValueListProperty" String="Code"/>
+                                                                                                                        </Record>
+                                                                                                                        <Record Type="Common.ValueListParameterDisplayOnly">
+                                                                                                                            <PropertyValue Property="ValueListProperty" String="name"/>
+                                                                                                                        </Record>
+                                                                                                                    </Collection>
+                                                                                                                </PropertyValue>
+                                                                                                            </Record>
+                                                                                                        </Annotation>
+                                                                                                    </Annotations>
+                                                                                                    <Annotations Target="TravelService.Booking/IsActiveEntity">
+                                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                    </Annotations>
+                                                                                                    <Annotations Target="TravelService.Booking/HasActiveEntity">
+                                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                    </Annotations>
+                                                                                                    <Annotations Target="TravelService.Booking/HasDraftEntity">
+                                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                    </Annotations>
+                                                                                                    <Annotations Target="TravelService.Booking/DraftAdministrativeData">
+                                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                    </Annotations>
+                                                                                                    <Annotations Target="TravelService.Currencies">
+                                                                                                        <Annotation Term="UI.Identification">
+                                                                                                            <Collection>
+                                                                                                                <Record Type="UI.DataField">
+                                                                                                                    <PropertyValue Property="Value" Path="name"/>
+                                                                                                                </Record>
+                                                                                                            </Collection>
+                                                                                                        </Annotation>
+                                                                                                    </Annotations>
+                                                                                                    <Annotations Target="TravelService.Currencies/name">
+                                                                                                        <Annotation Term="Common.Label" String="{i18n>Name}"/>
+                                                                                                        </Annotations>
+                                                                                                        <Annotations Target="TravelService.Currencies/descr">
+                                                                                                            <Annotation Term="Common.Label" String="{i18n>Description}"/>
+                                                                                                            </Annotations>
+                                                                                                            <Annotations Target="TravelService.Currencies/code">
+                                                                                                                <Annotation Term="Common.Text" Path="name"/>
+                                                                                                                <Annotation Term="Common.Label" String="{i18n>CurrencyCode}"/>
+                                                                                                                </Annotations>
+                                                                                                                <Annotations Target="TravelService.Currencies/symbol">
+                                                                                                                    <Annotation Term="Common.Label" String="{i18n>CurrencySymbol}"/>
+                                                                                                                    </Annotations>
+                                                                                                                    <Annotations Target="TravelService.Currencies/minorUnit">
+                                                                                                                        <Annotation Term="Common.Label" String="{i18n>CurrencyMinorUnit}"/>
+                                                                                                                        </Annotations>
+                                                                                                                        <Annotations Target="TravelService.BookingStatus">
+                                                                                                                            <Annotation Term="UI.Identification">
+                                                                                                                                <Collection>
+                                                                                                                                    <Record Type="UI.DataField">
+                                                                                                                                        <PropertyValue Property="Value" Path="name"/>
+                                                                                                                                    </Record>
+                                                                                                                                </Collection>
+                                                                                                                            </Annotation>
+                                                                                                                        </Annotations>
+                                                                                                                        <Annotations Target="TravelService.BookingStatus/name">
+                                                                                                                            <Annotation Term="Common.Label" String="{i18n>Name}"/>
+                                                                                                                            </Annotations>
+                                                                                                                            <Annotations Target="TravelService.BookingStatus/descr">
+                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Description}"/>
+                                                                                                                                </Annotations>
+                                                                                                                                <Annotations Target="TravelService.BookingStatus/Code">
+                                                                                                                                    <Annotation Term="Validation.AllowedValues">
+                                                                                                                                        <Collection>
+                                                                                                                                            <Record Type="Validation.AllowedValue">
+                                                                                                                                                <Annotation Term="Core.SymbolicName" String="New"/>
+                                                                                                                                                <PropertyValue Property="Value" String="N"/>
+                                                                                                                                            </Record>
+                                                                                                                                            <Record Type="Validation.AllowedValue">
+                                                                                                                                                <Annotation Term="Core.SymbolicName" String="Booked"/>
+                                                                                                                                                <PropertyValue Property="Value" String="B"/>
+                                                                                                                                            </Record>
+                                                                                                                                            <Record Type="Validation.AllowedValue">
+                                                                                                                                                <Annotation Term="Core.SymbolicName" String="Canceled"/>
+                                                                                                                                                <PropertyValue Property="Value" String="C"/>
+                                                                                                                                            </Record>
+                                                                                                                                        </Collection>
+                                                                                                                                    </Annotation>
+                                                                                                                                </Annotations>
+                                                                                                                                <Annotations Target="TravelService.DraftAdministrativeData">
+                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>Draft_DraftAdministrativeData}"/>
+                                                                                                                                    </Annotations>
+                                                                                                                                    <Annotations Target="TravelService.DraftAdministrativeData/DraftUUID">
+                                                                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_DraftUUID}"/>
+                                                                                                                                        </Annotations>
+                                                                                                                                        <Annotations Target="TravelService.DraftAdministrativeData/CreationDateTime">
+                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>Draft_CreationDateTime}"/>
+                                                                                                                                            </Annotations>
+                                                                                                                                            <Annotations Target="TravelService.DraftAdministrativeData/CreatedByUser">
+                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Draft_CreatedByUser}"/>
+                                                                                                                                                </Annotations>
+                                                                                                                                                <Annotations Target="TravelService.DraftAdministrativeData/DraftIsCreatedByMe">
+                                                                                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsCreatedByMe}"/>
+                                                                                                                                                    </Annotations>
+                                                                                                                                                    <Annotations Target="TravelService.DraftAdministrativeData/LastChangeDateTime">
+                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_LastChangeDateTime}"/>
+                                                                                                                                                        </Annotations>
+                                                                                                                                                        <Annotations Target="TravelService.DraftAdministrativeData/LastChangedByUser">
+                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>Draft_LastChangedByUser}"/>
+                                                                                                                                                            </Annotations>
+                                                                                                                                                            <Annotations Target="TravelService.DraftAdministrativeData/InProcessByUser">
+                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Draft_InProcessByUser}"/>
+                                                                                                                                                                </Annotations>
+                                                                                                                                                                <Annotations Target="TravelService.DraftAdministrativeData/DraftIsProcessedByMe">
+                                                                                                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsProcessedByMe}"/>
+                                                                                                                                                                    </Annotations>
+                                                                                                                                                                    <Annotations Target="TravelService.Currencies_texts/locale">
+                                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>LanguageCode}"/>
+                                                                                                                                                                        </Annotations>
+                                                                                                                                                                        <Annotations Target="TravelService.Currencies_texts/name">
+                                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>Name}"/>
+                                                                                                                                                                            </Annotations>
+                                                                                                                                                                            <Annotations Target="TravelService.Currencies_texts/descr">
+                                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Description}"/>
+                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                <Annotations Target="TravelService.Currencies_texts/code">
+                                                                                                                                                                                    <Annotation Term="Common.Text" Path="name"/>
+                                                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>CurrencyCode}"/>
+                                                                                                                                                                                    </Annotations>
+                                                                                                                                                                                    <Annotations Target="TravelService.BookingStatus_texts/locale">
+                                                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>LanguageCode}"/>
+                                                                                                                                                                                        </Annotations>
+                                                                                                                                                                                        <Annotations Target="TravelService.BookingStatus_texts/name">
+                                                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>Name}"/>
+                                                                                                                                                                                            </Annotations>
+                                                                                                                                                                                            <Annotations Target="TravelService.BookingStatus_texts/descr">
+                                                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Description}"/>
+                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                <Annotations Target="TravelService.BookingStatus_texts/Code">
+                                                                                                                                                                                                    <Annotation Term="Validation.AllowedValues">
+                                                                                                                                                                                                        <Collection>
+                                                                                                                                                                                                            <Record Type="Validation.AllowedValue">
+                                                                                                                                                                                                                <Annotation Term="Core.SymbolicName" String="New"/>
+                                                                                                                                                                                                                <PropertyValue Property="Value" String="N"/>
+                                                                                                                                                                                                            </Record>
+                                                                                                                                                                                                            <Record Type="Validation.AllowedValue">
+                                                                                                                                                                                                                <Annotation Term="Core.SymbolicName" String="Booked"/>
+                                                                                                                                                                                                                <PropertyValue Property="Value" String="B"/>
+                                                                                                                                                                                                            </Record>
+                                                                                                                                                                                                            <Record Type="Validation.AllowedValue">
+                                                                                                                                                                                                                <Annotation Term="Core.SymbolicName" String="Canceled"/>
+                                                                                                                                                                                                                <PropertyValue Property="Value" String="C"/>
+                                                                                                                                                                                                            </Record>
+                                                                                                                                                                                                        </Collection>
+                                                                                                                                                                                                    </Annotation>
+                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                            </Schema>
+                                                                                                                                                                                        </edmx:DataServices>
+                                                                                                                                                                                    </edmx:Edmx>

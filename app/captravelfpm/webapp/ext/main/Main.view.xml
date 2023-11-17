@@ -1,0 +1,33 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:macros="sap.fe.macros"
+    xmlns:macrosTable="sap.fe.macros.table"
+    xmlns:html="http://www.w3.org/1999/xhtml" controllerName="com.travelapp.fpm.captravelfpm.ext.main.Main">
+    <Page id="Main" title="Main">
+        <content>
+
+            <VBox class="sapUiSmallMarginBegin sapUiSmallMarginBottom">
+                <macros:FilterBar
+                    metaPath="/Travel/@com.sap.vocabularies.UI.v1.SelectionFields"
+                    id="idTravelFilters"
+                />
+            </VBox>
+            <VBox class="sapUiSmallMarginBottom">
+                <macros:Table
+                    metaPath="/Travel/@com.sap.vocabularies.UI.v1.LineItem"
+                    readOnly="true"
+                    id="idTravelTable"
+                    filterBar="idTravelFilters"
+                >
+                    <macros:actions>
+                        <macrosTable:Action
+                            key="create"
+                            text="Create"
+                            press="onCreatePress"
+                            placement="After"
+                            id="idTableCreateAction"
+                        />
+                    </macros:actions>
+                </macros:Table>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>
