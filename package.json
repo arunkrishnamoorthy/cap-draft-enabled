@@ -15,9 +15,11 @@
   },
   "scripts": {
     "start": "cds-serve",
-    "watch-captravelfe": "cds watch --open captravelfe/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-captravelfe": "cds watch --open captravelfe/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-captravelfpm": "cds watch --open captravelfpm/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "sapux": [
-    "app/captravelfe"
+    "app/captravelfe",
+    "app/captravelfpm"
   ]
 }

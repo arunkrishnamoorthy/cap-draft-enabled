@@ -1,0 +1,63 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:macros="sap.fe.macros"
+
+    xmlns:html="http://www.w3.org/1999/xhtml" controllerName="com.travelapp.fpm.captravelfpm.ext.view.Detail">
+    <Page id="detail" title="Detail View" showNavButton="true" navButtonPress="onBack">
+        <content>
+            <macros:Form id="idGeneral" metaPath="@UI.FieldGroup#general"></macros:Form>
+            <Table
+                id="idBookingTable"
+                items="{to_Booking}"
+            >   
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title text="Bookings" level="H2"/>
+                        <ToolbarSpacer/>
+                        <Button text="Create" visible="{ui>/isEditable}" press="onCreatePress"/>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column>
+                        <header>
+                            <Text text="Booking Date" />
+                        </header>
+                    </Column>
+                    <Column>
+                        <header>
+                            <Text text="Connection ID" />
+                        </header>
+                    </Column>
+                    <Column>
+                        <header>
+                            <Text text="Flight Date" />
+                        </header>
+                    </Column>
+                    <Column>
+                        <header>
+                            <Text text="Flight Price" />
+                        </header>
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <DatePicker dateValue="{BookingDate}" enabled="{ui>/isEditable}"/>
+                            <Input value="{ConnectionID}" enabled="{ui>/isEditable}" />
+                            <DatePicker dateValue="{FlightDate}" enabled="{ui>/isEditable}"/>
+                            <Input value="{FlightPrice}" enabled="{ui>/isEditable}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+        <footer>
+            <Bar>
+                <contentRight>
+                    <Button text="Edit" press="onEdit" visible="{= !${ui>/isEditable}}" />
+                    <Button text="Save" press="onSave" visible="{ui>/isEditable}"/>
+                    <Button text="Cancel" press="onCancel" visible="{ui>/isEditable}"/>
+                </contentRight>
+            </Bar>
+            
+        </footer>
+    </Page>
+</mvc:View>
