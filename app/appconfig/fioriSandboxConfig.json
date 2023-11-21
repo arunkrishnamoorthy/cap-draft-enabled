@@ -1,0 +1,98 @@
+{
+    "services": {
+      "LaunchPage": {
+        "adapter": {
+          "config": {
+            "catalogs": [],
+            "groups": [
+              {
+                "id": "home",
+                "title": "Home",
+                "isPreset": true,
+                "isVisible": true,
+                "isGroupLocked": false,
+                "tiles": []
+              },
+              {
+                "id": "TravelFeGroup",
+                "title": "Fiori Elements",
+                "isPreset": true,
+                "isVisible": true,
+                "isGroupLocked": false,
+                "tiles": [
+                  {
+                    "id": "TravelFe",
+                    "tileType": "sap.ushell.ui.tile.StaticTile",
+                    "properties": {
+                      "title": "Travel App",
+                      "targetURL": "#Travel-fiorielements"
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "fpm",
+                "title": "Flexible Programming Model",
+                "isPreset": true,
+                "isVisible": true,
+                "isGroupLocked": false,
+                "tiles": [
+                  {
+                    "id": "TravelFpm",
+                    "tileType": "sap.ushell.ui.tile.StaticTile",
+                    "properties": {
+                      "title": "Travel FPM",
+                      "targetURL": "#Travel-fpm"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "NavTargetResolution": {
+        "config": {
+          "enableClientSideTargetResolution": true
+        }
+      },
+      "ClientSideTargetResolution": {
+        "adapter": {
+          "config": {
+            "inbounds": {
+              "TravelFe": {
+                "semanticObject": "Travel",
+                "action": "fiorielements",
+                "title": "Travel Fioir Elements",
+                "signature": {
+                  "parameters": {
+                  },
+                  "additionalParameters": "ignored"
+                },
+                "resolutionResult": {
+                  "applicationType": "SAPUI5",
+                  "additionalInformation": "SAPUI5.Component=com.captravel.fe.captravelfe",
+                  "url": "captravelfe/webapp"
+                }
+              },
+              "TravelFpm": {
+                "semanticObject": "Travel",
+                "action": "fpm",
+                "title": "Travel FPM",
+                "signature": {
+                  "parameters": {},
+                  "additionalParameters": "allowed"
+                },
+                "resolutionResult": {
+                  "applicationType": "SAPUI5",
+                  "additionalInformation": "SAPUI5.Component=com.travelapp.fpm.captravelfpm",
+                  "url": "captravelfpm/webapp"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
