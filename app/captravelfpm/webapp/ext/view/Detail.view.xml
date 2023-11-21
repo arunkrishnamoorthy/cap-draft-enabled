@@ -6,7 +6,12 @@
             <macros:Form id="idGeneral" metaPath="@UI.FieldGroup#general"></macros:Form>
             <Table
                 id="idBookingTable"
-                items="{to_Booking}"
+                items="{
+                    parameters : {
+                        $$ownRequest : true
+                    },
+                    path: 'to_Booking'
+                }"
             >   
                 <headerToolbar>
                     <OverflowToolbar>
@@ -57,7 +62,6 @@
                     <Button text="Cancel" press="onCancel" visible="{ui>/isEditable}"/>
                 </contentRight>
             </Bar>
-            
         </footer>
     </Page>
 </mvc:View>
